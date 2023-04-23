@@ -12,7 +12,24 @@ namespace SFmodule32
                 app.UseDeveloperExceptionPage();
             }
 
-            app.MapGet("/", () => "Hello World!");
+            app.UseRouting();
+
+            app.Use(async (context, next) =>
+            {
+                // Для логирования данных о запросе используем свойства объекта HttpContext
+                Console.WriteLine($"[{DateTime.Now}]: New request to http://{context.Request.Host.Value + context.Request.Path}");
+                await next.Invoke();
+            });
+
+            _ = app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/", async context => { await context.Response.WriteAsync($"App name: {app.Environment.ApplicationName}. App running configuration: {app.Environment.EnvironmentName}"); });
+            });
+
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync($"Welcome to the {app.Environment.ApplicationName}!");
+            });
 
             app.Run();
         }

@@ -28,12 +28,22 @@ namespace SFmodule32_.net5
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
+
+            app.Use(async (context, next) =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                // Для логирования данных о запросе используем свойства объекта HttpContext
+                Console.WriteLine($"[{DateTime.Now}]: New request to http://{context.Request.Host.Value + context.Request.Path}");
+                await next.Invoke();
+            });
+
+            _ = app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/", async context => { await context.Response.WriteAsync($"App name: {env.ApplicationName}. App running configuration: {env.EnvironmentName}"); });
+            });
+
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync($"Welcome to the {env.ApplicationName}!");
             });
         }
     }
