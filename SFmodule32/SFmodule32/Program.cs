@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Builder;
+
 namespace SFmodule32
 {
     public class Program
@@ -12,6 +14,8 @@ namespace SFmodule32
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.Use(async (context, next) =>
@@ -21,17 +25,43 @@ namespace SFmodule32
                 await next.Invoke();
             });
 
-            _ = app.UseEndpoints(endpoints =>
+            app.Map("/about", appBuilder => Endpoint.About(app, app.Environment));
+
+            app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context => { await context.Response.WriteAsync($"App name: {app.Environment.ApplicationName}. App running configuration: {app.Environment.EnvironmentName}"); });
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync($"App name: {app.Environment.ApplicationName}. " +
+                    $"App running configuration: {app.Environment.EnvironmentName}");
+                });
             });
 
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync($"Welcome to the {app.Environment.ApplicationName}!");
+                await context.Response.WriteAsync($"Page not found");
             });
 
             app.Run();
         }
     }
+    public static class Endpoint{
+
+        public static void About(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.Run(async context =>
+            {
+                await context.Response.WriteAsync($"{env.ApplicationName}- ASP.Net Core tutorial project");
+            });
+        }
+
+        public static void Config(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.Run(async context =>
+            {
+                await context.Response.WriteAsync($"App name: {env.ApplicationName}. App running configuration: {env.EnvironmentName}");
+            });
+        }
+    }
+
+
 }
