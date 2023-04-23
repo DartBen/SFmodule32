@@ -26,6 +26,8 @@ namespace SFmodule32
             });
 
             app.Map("/about", appBuilder => Endpoint.About(app, app.Environment));
+            app.Map("/config", appBuilder => Endpoint.Config(app, app.Environment));
+
 
             app.UseEndpoints(endpoints =>
             {
