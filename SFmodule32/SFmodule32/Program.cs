@@ -21,7 +21,15 @@ namespace SFmodule32
             app.Use(async (context, next) =>
             {
                 // Для логирования данных о запросе используем свойства объекта HttpContext
-                Console.WriteLine($"[{DateTime.Now}]: New request to http://{context.Request.Host.Value + context.Request.Path}");
+                string log = $"[{DateTime.Now}]: New request to http://{context.Request.Host.Value + context.Request.Path}";
+                string pathToLoger = Path.Combine(app.Environment.ContentRootPath, "Logs", "RequestLog.txt");
+                Console.WriteLine(log + $"\n{pathToLoger}");
+
+                using (StreamWriter streamWriter = new StreamWriter(File.Open(pathToLoger, FileMode.Append)))
+                {
+                    streamWriter.WriteLineAsync(log);
+                }
+
                 await next.Invoke();
             });
 
@@ -46,7 +54,8 @@ namespace SFmodule32
             app.Run();
         }
     }
-    public static class Endpoint{
+    public static class Endpoint
+    {
 
         public static void About(IApplicationBuilder app, IWebHostEnvironment env)
         {
