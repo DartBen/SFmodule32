@@ -37,12 +37,13 @@ namespace MvcStartApp
 
             app.UseMiddleware<LoggingMiddleware>();
 
-            // получение данных
-            app.MapGet("/", (BlogContext db) => db.Users.ToList());
-
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapControllerRoute(
+                name: "Users",
+                pattern: "{controller=Users}/{action=Index}/{id?}");
 
             app.Run();
         }

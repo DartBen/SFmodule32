@@ -5,7 +5,7 @@ namespace SFmodule32
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             var app = builder.Build();
@@ -19,7 +19,7 @@ namespace SFmodule32
             // обрабатываем ошибки HTTP
             app.UseStatusCodePages();
 
-            //app.UseMiddleware<LoggingMiddleware>();
+            app.UseMiddleware<LoggingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
@@ -28,12 +28,25 @@ namespace SFmodule32
                     await context.Response.WriteAsync($"App name: {app.Environment.ApplicationName}. " +
                     $"App running configuration: {app.Environment.EnvironmentName}");
                 });
+
+                //endpoints.MapGet("/about",async () => await Endpoint.About(app, app.Environment));
             });
 
             // из-за длительности обработки запроса Map происходит блокировка всего остального
-            // нужно думать и многопоточности
-            app.Map("/about", appBuilder => Endpoint.About(app, app.Environment));
-            app.Map("/config", appBuilder => Endpoint.Config(app, app.Environment));
+            // нужно думать о многопоточности
+            app.Map("/about", () => Endpoint.About(app, app.Environment));
+
+            //endpoints.MapGet("/about", async context =>
+            //{
+            //    await context.Response.WriteAsync($"{app.Environment.ApplicationName}- ASP.Net Core tutorial project");
+            //});
+
+            app.Map("/config",  () =>  Endpoint.Config(app, app.Environment));
+            //endpoints.MapGet("/config", async context =>
+            //{
+            //    await context.Response.WriteAsync($"App name: {app.Environment.ApplicationName}. " +
+            //    $"App running configuration: {app.Environment.EnvironmentName}"); ;
+            //});
 
             app.Run(async (context) => await context.Response.WriteAsync("Page Not Found"));
 
