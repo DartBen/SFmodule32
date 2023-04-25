@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using MvcStartApp.Models.DB;
 using SFmodule32.Middlewares;
 
 namespace MvcStartApp
@@ -9,6 +12,10 @@ namespace MvcStartApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+            Console.WriteLine(connection);
+            builder.Services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection));
+            builder.Services.AddTransient<IBlogRepository, BlogRepository>();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
@@ -29,6 +36,9 @@ namespace MvcStartApp
             app.UseAuthorization();
 
             app.UseMiddleware<LoggingMiddleware>();
+
+            // получение данных
+            app.MapGet("/", (BlogContext db) => db.Users.ToList());
 
             app.MapControllerRoute(
                 name: "default",
