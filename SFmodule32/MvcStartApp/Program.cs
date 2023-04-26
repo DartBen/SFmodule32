@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using MvcStartApp.Models.DB;
 using SFmodule32.Middlewares;
 
@@ -13,9 +14,15 @@ namespace MvcStartApp
 
             // Add services to the container.
             string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+            string logConnection = builder.Configuration.GetConnectionString("LogConnection");
             Console.WriteLine(connection);
+
             builder.Services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection));
             builder.Services.AddTransient<IBlogRepository, BlogRepository>();
+            builder.Services.AddDbContext<RequestContext>(options => options.UseSqlServer(logConnection));
+            //builder.Services.TryAddTransient<IRequestRepository, RequestRepository>();
+            builder.Services.TryAddTransient<RequestRepository>();
+
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();

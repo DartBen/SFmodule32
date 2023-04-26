@@ -1,13 +1,17 @@
-﻿namespace SFmodule32.Middlewares
+﻿using MvcStartApp.Models.Db;
+using MvcStartApp.Models.DB;
+
+namespace SFmodule32.Middlewares
 {
     public class LoggingMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly RequestRepository _repository;
 
         /// <summary>
         ///  Middleware-компонент должен иметь конструктор, принимающий RequestDelegate
         /// </summary>
-        public LoggingMiddleware(RequestDelegate next)
+        public LoggingMiddleware(RequestDelegate next, RequestRepository requestRepository)
         {
             _next = next;
         }
@@ -16,6 +20,7 @@
         {
             LogConsole(context);
             await LogFile(context);
+            await LogBD(context);
             await _next.Invoke(context);
         }
 
@@ -35,6 +40,12 @@
 
             // Используем асинхронную запись в файл
             await File.AppendAllTextAsync(logFilePath, logMessage);
+        }
+
+        private async Task LogBD(HttpContext context)
+        {
+            var request = new Request() { Date = DateTime.Now, Id=Guid.NewGuid(), Url= $"http://{context.Request.Host.Value + context.Request.Path}" };
+            await _repository.AddRequest(request);
         }
     }
 }
