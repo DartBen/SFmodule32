@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFmodule32", "SFmodule32\SF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFmodule32-.net5", "SFmodule32-.net5\SFmodule32-.net5.csproj", "{5242735D-6CFE-4CD1-8D78-E6FA433A61CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcStartApp", "MvcStartApp\MvcStartApp.csproj", "{642ED144-1800-43DA-A774-BAF83500A8E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcStartApp", "MvcStartApp\MvcStartApp.csproj", "{642ED144-1800-43DA-A774-BAF83500A8E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

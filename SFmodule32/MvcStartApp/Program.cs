@@ -45,6 +45,10 @@ namespace MvcStartApp
                 name: "Users",
                 pattern: "{controller=Users}/{action=Index}/{id?}");
 
+            app.MapControllerRoute(
+                name: "Feedback",
+                pattern: "{controller=Feedback}/{action=Add}/{id?}");
+
             app.Run();
         }
     }
