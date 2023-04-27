@@ -16,7 +16,11 @@ namespace MvcStartApp.Controllers
         public async Task<IActionResult> Index()
         {
             var requests = await _repo.GetRequest();
-            return View(requests);
+            var sortedRequests = from r in requests
+                                 orderby r.Date descending
+                                 select r;
+
+            return View(sortedRequests);
         }
     }
 }
