@@ -1,23 +1,24 @@
 ﻿using MvcStartApp.Models.Db;
 using MvcStartApp.Models.DB;
 
-namespace SFmodule32.Middlewares
+namespace MvcStartApp.Controllers
 {
     public class LoggingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly RequestRepository _repository;
+        private IRequestRepository _repository;
 
         /// <summary>
         ///  Middleware-компонент должен иметь конструктор, принимающий RequestDelegate
         /// </summary>
-        public LoggingMiddleware(RequestDelegate next, RequestRepository requestRepository)
+        public LoggingMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IRequestRepository requestRepository)
         {
+            _repository = requestRepository;
             LogConsole(context);
             await LogFile(context);
             await LogBD(context);
@@ -44,7 +45,8 @@ namespace SFmodule32.Middlewares
 
         private async Task LogBD(HttpContext context)
         {
-            var request = new Request() { Date = DateTime.Now, Id=Guid.NewGuid(), Url= $"http://{context.Request.Host.Value + context.Request.Path}" };
+            //context.RequestServices
+            var request = new Request() { Date = DateTime.Now, Id = Guid.NewGuid(), Url = $"http://{context.Request.Host.Value + context.Request.Path}" };
             await _repository.AddRequest(request);
         }
     }
