@@ -5,7 +5,7 @@ namespace MvcStartApp.Models.DB
 {
     public sealed class RequestContext : DbContext
     {
-        public DbSet<Request> Requests { get; set; }
+        public DbSet<Request> DbRequests { get; set; }
 
         public RequestContext(DbContextOptions<RequestContext> options) : base(options)
         {

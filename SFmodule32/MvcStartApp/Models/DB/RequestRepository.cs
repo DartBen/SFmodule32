@@ -15,7 +15,7 @@ namespace MvcStartApp.Models.DB
             // Добавление пользователя
             var entry = _context.Entry(request);
             if (entry.State == EntityState.Detached)
-                await _context.Requests.AddAsync(request);
+                await _context.DbRequests.AddAsync(request);
 
             // Сохранение изенений
             await _context.SaveChangesAsync();
@@ -23,7 +23,12 @@ namespace MvcStartApp.Models.DB
 
         public async Task<Request[]> GetRequest()
         {
-            return await _context.Requests.ToArrayAsync();
+            return await _context.DbRequests.ToArrayAsync();
         }
+    }
+    public interface IRequestRepository
+    {
+        Task AddRequest(Request request);
+        Task<Request[]> GetRequest();
     }
 }

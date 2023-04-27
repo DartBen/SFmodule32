@@ -14,7 +14,7 @@ namespace MvcStartApp
 
             // Add services to the container.
             string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-            string logConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+            string logConnection = builder.Configuration.GetConnectionString("LogConnection");
             Console.WriteLine(connection);
 
             builder.Services.AddDbContext<BlogContext>(options => options.UseSqlServer(connection));
