@@ -26,9 +26,4 @@ namespace MvcStartApp.Models.DB
             return await _context.DbRequests.ToArrayAsync();
         }
     }
-    public interface IRequestRepository
-    {
-        Task AddRequest(Request request);
-        Task<Request[]> GetRequest();
-    }
 }
